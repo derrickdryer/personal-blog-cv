@@ -8,7 +8,7 @@ lead: A long post that showcases style elements.
 {: .message }
 
 - toc
-{: toc }
+  {: toc }
 
 Cum sociis natoque penatibus et magnis <a href="#">dis parturient montes</a>, nascetur ridiculus mus. _Aenean eu leo quam._ Pellentesque ornare sem lacinia quam venenatis vestibulum. Sed posuere consectetur est at lobortis. Cras mattis consectetur purus sit amet fermentum.
 
@@ -20,13 +20,13 @@ Etiam porta **sem malesuada magna** mollis euismod. Cras mattis consectetur puru
 
 HTML defines a long list of available inline tags, a complete list of which can be found on the [Mozilla Developer Network](https://developer.mozilla.org/en-US/docs/Web/HTML/Element).
 
--   **To bold text**, use `<strong>`.
--   _To italicize text_, use `<em>`.
--   <mark>To highlight</mark>, use `<mark>`.
--   Abbreviations, like <abbr title="HyperText Markup Langage">HTML</abbr>, should use `<abbr>` with an optional `title` attribute for the full phrase.
--   Citations, like <cite>— Franz Kafka</cite>, should use `<cite>`.
--   <del>Deleted</del> text should use `<del>` and <ins>inserted</ins> text should use `<ins>`.
--   Superscript <sup>text</sup> uses `<sup>` and subscript <sub>text</sub> uses `<sub>`.
+- **To bold text**, use `<strong>`.
+- _To italicize text_, use `<em>`.
+- <mark>To highlight</mark>, use `<mark>`.
+- Abbreviations, like <abbr title="HyperText Markup Langage">HTML</abbr>, should use `<abbr>` with an optional `title` attribute for the full phrase.
+- Citations, like <cite>— Franz Kafka</cite>, should use `<cite>`.
+- <del>Deleted</del> text should use `<del>` and <ins>inserted</ins> text should use `<ins>`.
+- Superscript <sup>text</sup> uses `<sup>` and subscript <sub>text</sub> uses `<sub>`.
 
 Most of these elements are styled by browsers with few modifications in the CSS of this theme.
 
@@ -94,9 +94,9 @@ Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. N
 
 Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aenean lacinia bibendum nulla sed consectetur. Etiam porta sem malesuada magna mollis euismod. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.
 
--   Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
--   Donec id elit non mi porta gravida at eget metus.
--   Nulla vitae elit libero, a pharetra augue.
+- Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
+- Donec id elit non mi porta gravida at eget metus.
+- Nulla vitae elit libero, a pharetra augue.
 
 Donec ullamcorper nulla non metus auctor fringilla. Nulla vitae elit libero, a pharetra augue.
 
@@ -167,7 +167,7 @@ Aenean lacinia bibendum nulla sed consectetur. Lorem ipsum dolor sit amet, conse
 
 Nullam id dolor id nibh ultricies vehicula ut id elit. Sed posuere consectetur est at lobortis. Nullam quis risus eget urna mollis ornare vel eu leo. This concludes the post.
 
-* * *
+---
 
 Want to see something else added? <a href="https://github.com/piazzai/cvless/issues/new">Open an issue.</a>
 

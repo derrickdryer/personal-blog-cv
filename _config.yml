@@ -1,14 +1,47 @@
-title: ""
-description: ""
+title: Derrick Dryer
+description: Systems, servers, and stories from the homelab.
 baseurl: ""
-url: ""
+url: https://www.derrickdryer.xyz
 
+theme: cvless
+
+# site settings
+taglong: "A portfolio and blog showcasing my journey from hardware support to Linux system administration."
+tagshort: "Tech Portfolio & Blog"
+cv: true
+
+# author settings
+author:
+  name: Derrick Dryer
+  email: contact@derrickdryer.xyz
+photo: assets/files/photo.jpg
+joblines:
+  - Homelab & DevOps Practitioner
+  - Linux • Containers • Cloud
+  - Pittsburgh, PA
+address: Pittsburgh, PA
+phone: +1 412 480 6852
+
+# profile links
+profile:
+  facebook: https://www.facebook.com/derrick.e.dryer
+  x: https://x.com/cottontail_dev
+  # mastodon: https://mastodon.social/@username
+  # bluesky: https://bsky.app/profile/username.bsky.social
+  instagram: https://www.instagram.com/derrick.e.dryer
+  linkedin: https://www.linkedin.com/in/ddryer007
+  # xing: https://www.xing.com/profile/username
+  # stackoverflow: https://stackoverflow.com/users/0000000/username
+  # medium: https://medium.com/@username
+  github: https://github.com/derrickdryer
+
+# build settings
+permalink: pretty
 exclude:
-  - demo/
-  - cvless.gemspec
   - LICENSE
   - README.md
-  - screenshot.png
+  - Gemfile
+  - vendor/
 
 plugins:
   - jekyll-feed
@@ -18,18 +51,4 @@ plugins:
   - jekyll-sitemap
 
 sass:
-  style: compressed
   sourcemap: never
-
-feed:
-  path: atom.xml
-
-autopages:
-  enabled: false
-
-pagination:
-  enabled: true
-  per_page: 1
-  sort_reverse: true
-  permalink: /:num/
-  title: ":title &middot; Page :num"
