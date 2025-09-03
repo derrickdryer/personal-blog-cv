@@ -1,0 +1,111 @@
+name: Jekyll CI/CD (Native → Linode + Cloudflare purge)
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+concurrency:
+  group: jekyll-cicd
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  RUBY_VERSION: "3.2"
+  BUILD_DIR: _site
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ env.RUBY_VERSION }}
+          bundler-cache: true
+
+      # If you use Node/Tailwind, add it here
+
+      - name: Build site
+        run: JEKYLL_ENV=production bundle exec jekyll build --future
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: site
+          path: ${{ env.BUILD_DIR }}
+
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: site
+          path: ${{ env.BUILD_DIR }}
+
+      - name: Install rsync & ssh
+        run: sudo apt-get update && sudo apt-get install -y rsync openssh-client jq
+
+      - name: Write SSH private key
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+
+      - name: Trust remote host key
+        env:
+          LINODE_HOST: ${{ secrets.LINODE_HOST }}
+          LINODE_PORT: ${{ secrets.LINODE_PORT }}
+        run: |
+          : "${LINODE_PORT:=22}"
+          ssh-keyscan -p "$LINODE_PORT" "$LINODE_HOST" >> ~/.ssh/known_hosts
+
+      - name: Deploy via rsync
+        env:
+          LINODE_USER: ${{ secrets.LINODE_USER }}
+          LINODE_HOST: ${{ secrets.LINODE_HOST }}
+          LINODE_PORT: ${{ secrets.LINODE_PORT }}
+          LINODE_PATH: ${{ secrets.LINODE_PATH }}
+        run: |
+          : "${LINODE_PORT:=22}"
+          rsync -az --delete \
+            --chmod=Du=rwx,Dgo=rx,Fu=rw,Fgo=r \
+            -e "ssh -p ${LINODE_PORT} -i ~/.ssh/id_ed25519" \
+            "${{ env.BUILD_DIR }}/" "${LINODE_USER}@${LINODE_HOST}:${LINODE_PATH}/"
+
+      # ---- Cloudflare cache purge (enabled) ----
+      - name: Purge Cloudflare cache (purge_everything)
+        if: ${{ secrets.CF_ZONE_ID && secrets.CF_API_TOKEN }}
+        env:
+          CF_ZONE_ID: ${{ secrets.CF_ZONE_ID }}
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          echo "Purging Cloudflare cache for zone ${CF_ZONE_ID}…"
+          RESP="$(curl -sS -X POST "https://api.cloudflare.com/client/v4/zones/${CF_ZONE_ID}/purge_cache" \
+                  -H "Authorization: Bearer ${CF_API_TOKEN}" \
+                  -H "Content-Type: application/json" \
+                  --data '{"purge_everything":true}')"
+          echo "$RESP" | jq -r '.'
+          echo "$RESP" | jq -e '.success == true' >/dev/null
+
+      # Optional: Nginx reload (requires sudoers rule)
+      # - name: Reload Nginx
+      #   env:
+      #     LINODE_USER: ${{ secrets.LINODE_USER }}
+      #     LINODE_HOST: ${{ secrets.LINODE_HOST }}
+      #     LINODE_PORT: ${{ secrets.LINODE_PORT }}
+      #   run: |
+      #     : "${LINODE_PORT:=22}"
+      #     ssh -p "${LINODE_PORT}" -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=yes \
+      #       "${LINODE_USER}@${LINODE_HOST}" 'sudo nginx -t && sudo systemctl reload nginx'
