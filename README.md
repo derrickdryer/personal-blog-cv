@@ -1,4 +1,4 @@
-# My Blog
+# Personal Blog/CV
 
 This is my personal blog and CV site, built with [Jekyll](https://jekyllrb.com/) and customized from the  
 [cvless](https://github.com/piazzai/cvless) theme by [Piazzai](https://github.com/piazzai).
